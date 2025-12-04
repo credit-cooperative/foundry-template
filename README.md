@@ -44,7 +44,7 @@ bun run setup  # Initialize git hooks
 This template integrates [@credit-cooperative/devkit](https://www.npmjs.com/package/@credit-cooperative/devkit) which provides:
 
 - Shared Just recipes for build automation
-- Biome/Prettier/Solhint configurations
+- Prettier/Solhint configurations
 - TypeScript configs for mixed projects
 - GitHub Actions workflows
 
@@ -67,7 +67,7 @@ just build              # Compile contracts
 just test               # Run tests
 just fmt-check          # Check formatting
 just fmt-write          # Auto-format code
-just lint               # Run all linters
+just full-check         # Run all quality checks (linting + formatting)
 just coverage           # Generate coverage report
 just gas-report         # Generate gas usage report
 ```
@@ -179,12 +179,20 @@ Auto-format all code:
 just fmt-write
 ```
 
-### Lint
+### Quality Checks
 
-Run all linters:
+Run all quality checks (linting + formatting):
 
 ```sh
-just lint
+just full-check
+```
+
+Run specific checks:
+
+```sh
+just solhint-check      # Solidity linting
+just fmt-check          # Solidity formatting
+just prettier-check     # JSON/Markdown/YAML formatting
 ```
 
 ### Deploy
@@ -225,28 +233,16 @@ foundry-template/
 
 The template uses devkit configurations by default. You can override as needed:
 
-**Biome (linting):**
+**Solhint (Solidity linting):**
 
-```jsonc
-// biome.jsonc
-{
-  "extends": ["@credit-cooperative/devkit/biome"],
-  "overrides": [
-    {
-      "includes": ["tests/**/*.sol"],
-      "linter": {
-        "rules": {
-          "style": {
-            "noNonNullAssertion": "off",
-          },
-        },
-      },
-    },
-  ],
-}
-```
+Edit `.solhint.json` to customize Solidity linting rules.
+
+**Prettier (formatting):**
+
+The template uses Prettier from devkit for JSON, Markdown, and YAML files. Solidity files are formatted with `forge fmt`.
 
 **Foundry:**
+
 Edit `foundry.toml` directly for project-specific settings.
 
 ## GitHub Actions
