@@ -1,216 +1,383 @@
-# Foundry Template [![Open in Gitpod][gitpod-badge]][gitpod] [![Github Actions][gha-badge]][gha] [![Foundry][foundry-badge]][foundry] [![License: MIT][license-badge]][license]
+# Credit Cooperative Foundry Template
 
-[gitpod]: https://gitpod.io/#https://github.com/PaulRBerg/foundry-template
-[gitpod-badge]: https://img.shields.io/badge/Gitpod-Open%20in%20Gitpod-FFB45B?logo=gitpod
-[gha]: https://github.com/PaulRBerg/foundry-template/actions
-[gha-badge]: https://github.com/PaulRBerg/foundry-template/actions/workflows/ci.yml/badge.svg
-[foundry]: https://getfoundry.sh/
-[foundry-badge]: https://img.shields.io/badge/Built%20with-Foundry-FFDB1C.svg
+[![License: MIT][license-badge]][license]
+
 [license]: https://opensource.org/licenses/MIT
 [license-badge]: https://img.shields.io/badge/License-MIT-blue.svg
 
-A Foundry-based template for developing Solidity smart contracts, with sensible defaults.
+A production-ready Foundry-based template for developing Solidity smart contracts at Credit Cooperative, with sensible defaults and integrated tooling.
 
 ## What's Inside
 
-- [Forge](https://github.com/foundry-rs/foundry/blob/master/forge): compile, test, fuzz, format, and deploy smart
-  contracts
-- [Bun]: Foundry defaults to git submodules, but this template uses Node.js packages for managing dependencies
-- [Forge Std](https://github.com/foundry-rs/forge-std): collection of helpful contracts and utilities for testing
-- [Prettier](https://github.com/prettier/prettier): code formatter for non-Solidity files
-- [Solhint](https://github.com/protofire/solhint): linter for Solidity code
+- **[Foundry](https://github.com/foundry-rs/foundry)**: Compile, test, fuzz, format, and deploy smart contracts
+- **[Credit Coop Devkit](https://github.com/credit-cooperative/devkit)**: Shared configuration and build automation
+- **[Just](https://github.com/casey/just)**: Command runner for development tasks
+- **[Husky](https://github.com/typicode/husky)**: Git hooks for pre-commit validation
+- **[lint-staged](https://github.com/okonet/lint-staged)**: Run linters on staged files
+- **[Forge Std](https://github.com/foundry-rs/forge-std)**: Collection of helpful contracts for testing
+- **[Prettier](https://github.com/prettier/prettier)**: Code formatter for non-Solidity files
+- **[Solhint](https://github.com/protofire/solhint)**: Linter for Solidity code
 
 ## Getting Started
 
-Click the [`Use this template`](https://github.com/PaulRBerg/foundry-template/generate) button at the top of the page to
-create a new repository with this repo as the initial state.
+### Prerequisites
 
-Or, if you prefer to install the template manually:
+- [Foundry](https://github.com/foundry-rs/foundry#installation) >= 0.2.0
+- [Bun](https://bun.sh) >= 1.0
+- [Just](https://github.com/casey/just#installation) >= 1.0
+
+### Installation
+
+Create a new project from this template:
 
 ```sh
-$ forge init --template PaulRBerg/foundry-template my-project
-$ cd my-project
-$ bun install # install Solhint, Prettier, and other Node.js deps
+forge init --template credit-cooperative/foundry-template my-project
+cd my-project
+bun install
+bun run setup  # Initialize git hooks
 ```
-
-If this is your first time with Foundry, check out the
-[installation](https://github.com/foundry-rs/foundry#installation) instructions.
 
 ## Features
 
-This template builds upon the frameworks and libraries mentioned above, so please consult their respective documentation
-for details about their specific features.
+### 🛠️ Devkit Integration
 
-For example, if you're interested in exploring Foundry in more detail, you should look at the
-[Foundry Book](https://book.getfoundry.sh). In particular, you may be interested in reading the
-[Writing Tests](https://book.getfoundry.sh/forge/writing-tests.html) tutorial.
+This template integrates [@credit-cooperative/devkit](https://www.npmjs.com/package/@credit-cooperative/devkit) which provides:
 
-### Sensible Defaults
+- Shared Just recipes for build automation
+- Biome/Prettier/Solhint configurations
+- TypeScript configs for mixed projects
+- GitHub Actions workflows
 
-This template comes with a set of sensible default configurations for you to use. These defaults can be found in the
-following files:
+All configuration is centralized in devkit and automatically updated when you upgrade.
 
-```text
-├── .editorconfig
-├── .gitignore
-├── .prettierignore
-├── .prettierrc.yml
-├── .solhint.json
-├── foundry.toml
-└── remappings.txt
+### 🔨 Just Command Runner
+
+We use [Just](https://github.com/casey/just) instead of npm scripts for better composability and error handling.
+
+**See all available commands:**
+
+```sh
+just --list
 ```
 
-### VSCode Integration
+**Common commands:**
 
-This template is IDE agnostic, but for the best user experience, you may want to use it in VSCode alongside Nomic
-Foundation's [Solidity extension](https://marketplace.visualstudio.com/items?itemName=NomicFoundation.hardhat-solidity).
+```sh
+just build              # Compile contracts
+just test               # Run tests
+just fmt-check          # Check formatting
+just fmt-write          # Auto-format code
+just lint               # Run all linters
+just coverage           # Generate coverage report
+just gas-report         # Generate gas usage report
+```
 
-For guidance on how to integrate a Foundry project in VSCode, please refer to this
-[guide](https://book.getfoundry.sh/config/vscode).
+### 🎨 Pre-commit Hooks
 
-### GitHub Actions
+Automatic code formatting and linting on every commit:
 
-This template comes with GitHub Actions pre-configured. Your contracts will be linted and tested on every push and pull
-request made to the `main` branch.
+- Solidity files: Auto-formatted with `forge fmt` and linted with `solhint`
+- JSON/Markdown/YAML: Auto-formatted with `prettier`
 
-You can edit the CI script in [.github/workflows/ci.yml](./.github/workflows/ci.yml).
+Configured via `.lintstagedrc.js` and runs via Husky.
 
-## Installing Dependencies
+### 📊 Advanced Foundry Profiles
 
-Foundry typically uses git submodules to manage dependencies, but this template uses Node.js packages because
-[submodules don't scale](https://twitter.com/PaulRBerg/status/1736695487057531328).
+Multiple profiles for different use cases:
 
-This is how to install dependencies:
+```sh
+# Default - Standard development
+forge build
 
-1. Install the dependency using your preferred package manager, e.g. `bun install dependency-name`
-   - Use this syntax to install from GitHub: `bun install github:username/repo-name`
-2. Add a remapping for the dependency in [remappings.txt](./remappings.txt), e.g.
-   `dependency-name=node_modules/dependency-name`
+# Lite - Fast iteration (no optimizer, low fuzz runs)
+FOUNDRY_PROFILE=lite forge test
 
-Note that OpenZeppelin Contracts is pre-installed, so you can follow that as an example.
+# Optimized - Production builds (1M optimizer runs, via-ir)
+FOUNDRY_PROFILE=optimized forge build
 
-## Writing Tests
+# Test-optimized - Test production builds without recompiling
+FOUNDRY_PROFILE=test-optimized forge test
 
-To write a new test contract, you start by importing `Test` from `forge-std`, and then you inherit it in your test
-contract. Forge Std comes with a pre-instantiated [cheatcodes](https://book.getfoundry.sh/cheatcodes/) environment
-accessible via the `vm` property. If you would like to view the logs in the terminal output, you can add the `-vvv` flag
-and use [console.log](https://book.getfoundry.sh/faq?highlight=console.log#how-do-i-use-consolelog).
+# CI - High fuzz runs for continuous integration
+FOUNDRY_PROFILE=ci forge test
+```
 
-This template comes with an example test contract [Foo.t.sol](./tests/Foo.t.sol)
+See `foundry.toml` for detailed profile configurations.
+
+### 🌐 Multi-Chain Support
+
+Pre-configured RPC endpoints for 15+ networks:
+
+- Mainnets: Ethereum, Arbitrum, Optimism, Base, Polygon, BSC, and more
+- Testnets: Sepolia, Base Sepolia, Optimism Sepolia, Arbitrum Sepolia
+
+Easy to extend with your own RPC providers.
 
 ## Usage
 
-This is a list of the most frequently needed commands.
-
 ### Build
 
-Build the contracts:
+Compile contracts:
 
 ```sh
-$ forge build
+just build
+```
+
+Build with specific profile:
+
+```sh
+FOUNDRY_PROFILE=optimized forge build
 ```
 
 ### Clean
 
-Delete the build artifacts and cache directories:
+Delete build artifacts:
 
 ```sh
-$ forge clean
-```
-
-### Compile
-
-Compile the contracts:
-
-```sh
-$ forge build
-```
-
-### Coverage
-
-Get a test coverage report:
-
-```sh
-$ forge coverage
-```
-
-### Deploy
-
-Deploy to Anvil:
-
-```sh
-$ forge script script/Deploy.s.sol --broadcast --fork-url http://localhost:8545
-```
-
-For this script to work, you need to have a `MNEMONIC` environment variable set to a valid
-[BIP39 mnemonic](https://iancoleman.io/bip39/).
-
-For instructions on how to deploy to a testnet or mainnet, check out the
-[Solidity Scripting](https://book.getfoundry.sh/tutorials/solidity-scripting.html) tutorial.
-
-### Format
-
-Format the contracts:
-
-```sh
-$ forge fmt
-```
-
-### Gas Usage
-
-Get a gas report:
-
-```sh
-$ forge test --gas-report
-```
-
-### Lint
-
-Lint the contracts:
-
-```sh
-$ bun run lint
+just clean
 ```
 
 ### Test
 
-Run the tests:
+Run all tests:
 
 ```sh
-$ forge test
+just test
 ```
 
-### Test Coverage
-
-Generate test coverage and output result to the terminal:
+Run tests with gas reporting:
 
 ```sh
-$ bun run test:coverage
+just gas-report
 ```
 
-### Test Coverage Report
-
-Generate test coverage with lcov report (you'll have to open the `./coverage/index.html` file in your browser, to do so
-simply copy paste the path):
+Run specific test:
 
 ```sh
-$ bun run test:coverage:report
+forge test --match-test testFoo
 ```
 
-> [!NOTE]
->
-> This command requires you to have [`lcov`](https://github.com/linux-test-project/lcov) installed on your machine. On
-> macOS, you can install it with Homebrew: `brew install lcov`.
+### Coverage
 
-## Related Efforts
+Generate coverage report:
 
-- [foundry-rs/forge-template](https://github.com/foundry-rs/forge-template)
-- [abigger87/femplate](https://github.com/abigger87/femplate)
-- [cleanunicorn/ethereum-smartcontract-template](https://github.com/cleanunicorn/ethereum-smartcontract-template)
-- [FrankieIsLost/forge-template](https://github.com/FrankieIsLost/forge-template)
+```sh
+just coverage
+```
+
+### Format
+
+Check formatting:
+
+```sh
+just fmt-check
+```
+
+Auto-format all code:
+
+```sh
+just fmt-write
+```
+
+### Lint
+
+Run all linters:
+
+```sh
+just lint
+```
+
+### Deploy
+
+Deploy to local Anvil:
+
+```sh
+forge script scripts/solidity/Deploy.s.sol --broadcast --fork-url http://localhost:8545
+```
+
+For testnet/mainnet deployment, see the [Solidity Scripting tutorial](https://getfoundry.sh/guides/scripting-with-solidity/).
+
+## Project Structure
+
+```
+foundry-template/
+├── scripts/
+│   ├── bash/
+│   │   └── prepare-artifacts.sh    # Build production artifacts
+│   └── solidity/
+│       ├── Base.s.sol              # Base deployment script
+│       └── Deploy.s.sol            # Example deployment
+├── src/
+│   └── Foo.sol                     # Example contract
+├── tests/
+│   └── Foo.t.sol                   # Example tests
+├── .husky/
+│   └── pre-commit                  # Git hook
+├── foundry.toml                    # Foundry configuration
+├── justfile                        # Just command definitions
+├── .lintstagedrc.js               # Pre-commit linting config
+└── package.json                    # Dependencies
+```
+
+## Configuration Files
+
+### Extending Configurations
+
+The template uses devkit configurations by default. You can override as needed:
+
+**Biome (linting):**
+
+```jsonc
+// biome.jsonc
+{
+  "extends": ["@credit-cooperative/devkit/biome"],
+  "overrides": [
+    {
+      "includes": ["tests/**/*.sol"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noNonNullAssertion": "off",
+          },
+        },
+      },
+    },
+  ],
+}
+```
+
+**Foundry:**
+Edit `foundry.toml` directly for project-specific settings.
+
+## GitHub Actions
+
+The template includes a production-ready CI/CD workflow:
+
+- ✅ Lint checks (Solidity + Prettier)
+- ✅ Build with artifact caching
+- ✅ Comprehensive testing
+- ✅ Coverage reporting (Codecov)
+- ✅ Concurrency control
+
+See `.github/workflows/ci.yml`.
+
+## Environment Variables
+
+Copy `.env.example` to `.env` and fill in:
+
+```sh
+# API Keys
+ETHERSCAN_API_KEY=
+ARBISCAN_API_KEY=
+
+# Deployment
+DEPLOYER_PRIVATE_KEY=
+```
+
+## Installing Dependencies
+
+This template uses npm packages instead of git submodules for better scalability.
+
+**Install a dependency:**
+
+```sh
+bun install dependency-name
+
+# From GitHub
+bun install github:username/repo-name
+```
+
+**Add remapping:**
+
+```txt
+# remappings.txt
+dependency-name=node_modules/dependency-name
+```
+
+Example: OpenZeppelin Contracts is pre-installed and remapped.
+
+## Updating Devkit
+
+Get latest devkit features:
+
+```sh
+bun update @credit-cooperative/devkit
+```
+
+This updates all shared configurations and Just recipes automatically.
+
+## Writing Tests
+
+Tests inherit from `forge-std/Test.sol`:
+
+```solidity
+import { Test } from "forge-std/Test.sol";
+
+contract MyTest is Test {
+    function testExample() public {
+        assertTrue(true);
+    }
+}
+```
+
+Run with verbosity:
+
+```sh
+forge test -vvv
+```
+
+See the example in `tests/Foo.t.sol` for unit, fuzz, and fork test patterns.
+
+## Troubleshooting
+
+### "just: command not found"
+
+Install Just:
+
+```sh
+# macOS
+brew install just
+
+# Linux
+curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash
+```
+
+### Pre-commit hooks not running
+
+Re-initialize Husky:
+
+```sh
+bun run setup
+```
+
+### Import resolution issues
+
+Ensure remappings are correct:
+
+```sh
+forge remappings
+```
+
+## Related Projects
+
+- [@credit-cooperative/devkit](https://www.npmjs.com/package/@credit-cooperative/devkit) - Shared configuration and tooling
+- [foundry-rs/forge-template](https://github.com/foundry-rs/forge-template) - Official Foundry template
+- [PaulRBerg/foundry-template](https://github.com/PaulRBerg/foundry-template) - Original inspiration
+
+## Contributing
+
+We welcome contributions! Please:
+
+1. Run `just fmt-write` before committing
+2. Ensure all tests pass: `just test`
+3. Follow existing code style
 
 ## License
 
 This project is licensed under MIT.
-test
-test
+
+## Credits
+
+Built with ❤️ by [Credit Cooperative](https://creditcoop.xyz)
+
+Inspired by [Sablier](https://sablier.com)'s production infrastructure.

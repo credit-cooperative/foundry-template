@@ -3,6 +3,9 @@ pragma solidity >=0.8.29 <0.9.0;
 
 import { Script } from "forge-std/src/Script.sol";
 
+/// @title BaseScript
+/// @author Credit Cooperative
+/// @notice Base contract for deployment scripts with transaction broadcasting utilities
 abstract contract BaseScript is Script {
     /// @dev Included to enable compilation of the script without a $MNEMONIC environment variable.
     string internal constant TEST_MNEMONIC = "test test test test test test test test test test test junk";

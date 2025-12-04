@@ -1,19 +1,22 @@
 {
-  "name": "@prb/foundry-template",
+  "name": "@credit-cooperative/foundry-template",
   "description": "Foundry-based template for developing Solidity smart contracts",
   "private": true,
   "version": "1.0.0",
   "author": {
-    "name": "Paul Razvan Berg",
-    "url": "https://github.com/PaulRBerg"
+    "name": "credit-cooperative",
+    "url": "https://app.creditcoop.xyz"
   },
   "dependencies": {
     "@openzeppelin/contracts": "5.3.0"
   },
   "devDependencies": {
-    "forge-std": "github:foundry-rs/forge-std#v1.9.7",
+    "@credit-cooperative/devkit": "^1.0.0",
+    "forge-std": "github:foundry-rs/forge-std#v1.10.0",
+    "husky": "^9.1",
+    "lint-staged": "^16.1",
     "prettier": "^3.5",
-    "solhint": "^5.1"
+    "solhint": "^6.0"
   },
   "keywords": [
     "blockchain",
@@ -22,17 +25,11 @@
     "foundry",
     "smart-contracts",
     "solidity",
-    "template"
+    "template",
+    "credit-cooperative"
   ],
   "scripts": {
-    "clean": "rm -rf cache out",
-    "build": "forge build",
-    "forge-check": "forge fmt --check",
-    "forge-write": "forge fmt",
-    "lint": "bun run lint:sol && bun run prettier:check",
-    "lint:sol": "bun run forge-check && bun solhint \"{script,src,tests}/**/*.sol\"",
-    "prettier:check": "prettier --check \"**/*.{json,md,yml}\"",
-    "prettier:write": "prettier --write \"**/*.{json,md,yml}\"",
-    "test": "forge test"
+    "prepack": "bun install --frozen-lockfile && bash ./scripts/prepare-artifacts.sh",
+    "setup": "husky"
   }
 }
