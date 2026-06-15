@@ -5,8 +5,6 @@ broadcast
 cache
 cache_hardhat-zk
 coverage
-deployments
-deployments-*
 docs
 node_modules
 out

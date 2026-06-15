@@ -197,13 +197,30 @@ just prettier-check     # JSON/Markdown/YAML formatting
 
 ### Deploy
 
-Deploy to local Anvil:
+Deployments are recorded in a curated, committed registry under [`deployments/`](./deployments/) — one
+`<chainId>.json` per chain. Raw Foundry `broadcast/` artifacts stay gitignored; the JSON registry is the
+source of truth that the [address-book](https://github.com/credit-cooperative/address-book) aggregator
+consumes. See [`deployments/README.md`](./deployments/README.md) for the schema.
+
+Deploy, broadcast, and update the registry in one step (chains are the RPC aliases in `foundry.toml`):
 
 ```sh
-forge script scripts/solidity/Deploy.s.sol --broadcast --fork-url http://localhost:8545
+just deploy scripts/solidity/Deploy.s.sol sepolia --verify     # add --private-key / --ledger etc. as needed
+just deploy-dry scripts/solidity/Deploy.s.sol sepolia          # simulate without broadcasting
 ```
 
-For testnet/mainnet deployment, see the [Solidity Scripting tutorial](https://getfoundry.sh/guides/scripting-with-solidity/).
+Then **review the `deployments/<chainId>.json` diff and commit it.** Merging to `main` triggers the
+`Deployments` workflow, which notifies the address-book aggregator.
+
+Other recipes:
+
+```sh
+just deployments-extract scripts/solidity/Deploy.s.sol   # rebuild the registry from the latest broadcast
+just deployments-check --rpc-url sepolia                 # verify every registry address has code on-chain
+```
+
+In multi-step deploys, read prior addresses back from the registry with `readDeployment("<Name>")` (from
+`BaseScript`) instead of passing them via `.env`.
 
 ## Project Structure
 
