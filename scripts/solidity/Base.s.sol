@@ -41,4 +41,16 @@ abstract contract BaseScript is Script {
         _;
         vm.stopBroadcast();
     }
+
+    /// @notice Reads a deployed contract address for the current chain from the deployments registry.
+    /// @dev Looks up `deployments/<chainId>.json` (maintained by `just deploy` / `just deployments-extract`).
+    ///      Use this in multi-step deploys to reference prior deployments instead of passing them via .env.
+    ///      Reverts if the registry file or the contract entry is missing; wrap in a try/catch for soft lookups.
+    /// @param name The contract name as recorded in the registry (e.g. "PaymentRails").
+    /// @return The deployed address of `name` on the current chain.
+    function readDeployment(string memory name) internal view returns (address) {
+        string memory path = string.concat("deployments/", vm.toString(block.chainid), ".json");
+        string memory json = vm.readFile(path);
+        return vm.parseJsonAddress(json, string.concat(".contracts.", name, ".address"));
+    }
 }

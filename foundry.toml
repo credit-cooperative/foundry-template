@@ -5,6 +5,7 @@
   bytecode_hash = "ipfs"
   evm_version = "shanghai" # For broad EVM chain compatibility
   fs_permissions = [
+    { access = "read", path = "./deployments" },
     { access = "read", path = "./out-optimized" },
     { access = "read", path = "package.json" },
   ]
