@@ -15,4 +15,5 @@ jobs:
     name: "Notify address-book"
     uses: "credit-cooperative/devkit/.github/workflows/deployments-dispatch.yml@v1"
     secrets:
-      dispatch-token: ${{ secrets.ADDRESS_BOOK_DISPATCH_TOKEN }}
+      app-id: ${{ secrets.CC_CI_APP_ID }}
+      app-private-key: ${{ secrets.CC_CI_APP_PRIVATE_KEY }}
